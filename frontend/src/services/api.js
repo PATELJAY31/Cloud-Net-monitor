@@ -137,3 +137,17 @@ export async function simulateDemoScenario(token, scenario) {
     body: JSON.stringify({ scenario }),
   });
 }
+
+export async function getNetworkPing() {
+  return apiRequest('/network/ping');
+}
+
+export async function analyzeNetworkTarget(token, target) {
+  return apiRequest('/network/analyze', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ target }),
+  });
+}

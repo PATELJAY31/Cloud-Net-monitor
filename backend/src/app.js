@@ -12,6 +12,7 @@ import { dashboardRoutes } from './routes/dashboardRoutes.js';
 import { demoRoutes } from './routes/demoRoutes.js';
 import { deviceRoutes } from './routes/deviceRoutes.js';
 import { metricRoutes } from './routes/metricRoutes.js';
+import { networkRoutes } from './routes/networkRoutes.js';
 import { settingsRoutes } from './routes/settingsRoutes.js';
 import { topologyRoutes } from './routes/topologyRoutes.js';
 
@@ -59,6 +60,7 @@ export function createApp() {
   app.use('/api/devices', deviceRoutes);
   app.use('/api/agents', agentRoutes);
   app.use('/api/metrics', metricRoutes);
+  app.use('/api/network', networkRoutes);
   app.use('/api/alerts', alertRoutes);
   app.use('/api/topology', topologyRoutes);
   app.use('/api/settings', settingsRoutes);

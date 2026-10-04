@@ -23,6 +23,7 @@ This repository is currently at **Phase 12** of the build plan:
 - Demo Mode is implemented with backend demo seeding, simulation APIs, and a frontend Demo Mode control page.
 - Optional Python CloudNet Agent is implemented for real heartbeat and metric submission.
 - Phase 12 testing and bug-fix pass is complete with frontend lint/build, backend syntax checks, and dependency audit passing.
+- Browser Mode and Target Analyzer are implemented for browser-level diagnostics and safe public target analysis.
 
 ## Architecture
 
@@ -173,6 +174,61 @@ The Device Details view loads from `GET /api/devices/:id` and displays:
 - Current latency, upload, download, packet counts, and packet loss.
 - Historical latency, traffic, and packet charts using backend metric samples.
 
+## Browser Mode / My Device
+
+The authenticated My Device view analyzes the browser and connection currently using the dashboard.
+
+It uses browser APIs for:
+
+- User agent and platform information.
+- Language and timezone.
+- Screen size and device pixel ratio.
+- Online/offline status.
+- Browser Network Information API estimates where supported.
+- A local browser session ID stored in localStorage.
+
+It also measures Browser -> Cloud API round-trip time with `GET /api/network/ping` using `performance.now()`.
+
+Limitations:
+
+- Browser Mode cannot read operating-system packet counters.
+- Browser Mode cannot discover all LAN devices.
+- Browser Mode does not create MongoDB device records.
+- Browser Mode is not the same as Agent Mode.
+
+## Target Analyzer
+
+The authenticated Target Analyzer view uses `POST /api/network/analyze`.
+
+Supported targets:
+
+- Public DNS hostnames.
+- Public IPv4 addresses.
+- Public IPv6 addresses.
+- HTTP and HTTPS URLs.
+
+It reports:
+
+- DNS resolution.
+- Public IPv4/IPv6 addresses.
+- HTTP/HTTPS reachability.
+- HTTP status.
+- Response time.
+- Final URL after safe redirects.
+- Safe server header, if present.
+
+Security restrictions:
+
+- Rejects localhost and private/local IP ranges.
+- Rejects cloud metadata addresses such as `169.254.169.254`.
+- Rejects arbitrary protocols such as `file://` and `ftp://`.
+- Rejects custom ports.
+- Validates DNS results and redirect destinations.
+- Limits timeout and response size.
+- Does not perform port scanning, vulnerability scanning, or unrestricted network discovery.
+
+Private/local addresses cannot be analyzed from the cloud backend. Use CloudNet Agent Mode for devices inside a local network.
+
 ## Network Analytics
 
 The authenticated Analytics view loads from `GET /api/metrics` and `GET /api/devices` and supports:
@@ -250,6 +306,12 @@ It uses:
 - `CLOUDNET_AGENT_INTERVAL_SECONDS`
 
 The agent uses optional `psutil` if installed. Without it, traffic and packet counters are zero instead of fabricated.
+
+## Mode Differences
+
+- Browser Mode: analyzes the current browser/device connection using browser APIs and Cloud API round-trip tests.
+- Agent Mode: provides deeper operating-system/network-interface monitoring through the optional Python agent.
+- Target Analyzer: performs limited application-level checks of public targets from the Render backend.
 
 ## Deployment Readiness
 

@@ -15,6 +15,8 @@ import {
   Router,
   Settings,
   FlaskConical,
+  MonitorSmartphone,
+  Search,
   ShieldCheck,
   Signal,
   WifiOff,
@@ -38,10 +40,14 @@ import { DeviceDetailsPage } from './DeviceDetails.jsx';
 import { DevicesPage } from './Devices.jsx';
 import { TopologyPage } from './Topology.jsx';
 import { DemoModePage } from './DemoMode.jsx';
+import { MyDevicePage } from './MyDevice.jsx';
+import { TargetAnalyzerPage } from './TargetAnalyzer.jsx';
 import { getDashboardSummary } from '../services/api.js';
 
 const navItems = [
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { id: 'my-device', label: 'My Device', icon: MonitorSmartphone },
+  { id: 'target-analyzer', label: 'Target Analyzer', icon: Search },
   { id: 'devices', label: 'Devices', icon: Monitor },
   { id: 'analytics', label: 'Analytics', icon: LineChartIcon },
   { id: 'alerts', label: 'Alerts', icon: Bell },
@@ -120,6 +126,8 @@ export function Dashboard({ onLogout, token, user }) {
 
       <section className="min-w-0 px-5 py-5 md:px-7">
         {activeView === 'dashboard' && <DashboardOverview onLogout={onLogout} token={token} />}
+        {activeView === 'my-device' && <MyDevicePage onLogout={onLogout} />}
+        {activeView === 'target-analyzer' && <TargetAnalyzerPage onLogout={onLogout} token={token} />}
         {activeView === 'devices' && (
           <DevicesPage onLogout={onLogout} onSelectDevice={openDeviceDetails} token={token} />
         )}
