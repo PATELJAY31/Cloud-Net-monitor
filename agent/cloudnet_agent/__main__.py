@@ -1,10 +1,16 @@
 import argparse
 import sys
-import time
 
 from .client import CloudNetApiError, CloudNetClient
-from .collector import collect_device_info, collect_metric
 from .config import load_config
+
+try:
+    from .collector import collect_device_info, collect_metric
+except ModuleNotFoundError as error:
+    if error.name == "psutil":
+        print("psutil is required for real monitoring. Run: pip install -r agent/requirements.txt", file=sys.stderr)
+        raise SystemExit(1) from error
+    raise
 
 
 def main() -> int:
@@ -35,16 +41,18 @@ def main() -> int:
 
         if args.command == "once":
             client.heartbeat({"status": "online"})
-            result = client.submit_metric(collect_metric(config.api_url, config.interval_seconds))
+            result = client.submit_metric(collect_metric(config.interval_seconds, config.probe_host))
             print(f"Metric submitted for {result['data']['device']['name']}")
             return 0
 
         while True:
             client.heartbeat({"status": "online"})
-            result = client.submit_metric(collect_metric(config.api_url, config.interval_seconds))
+            result = client.submit_metric(collect_metric(config.interval_seconds, config.probe_host))
             print(f"Metric submitted for {result['data']['device']['name']}")
-            time.sleep(config.interval_seconds)
     except CloudNetApiError as error:
+        print(error, file=sys.stderr)
+        return 1
+    except RuntimeError as error:
         print(error, file=sys.stderr)
         return 1
     except KeyboardInterrupt:

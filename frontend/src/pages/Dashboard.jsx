@@ -153,25 +153,30 @@ function DashboardOverview({ onLogout, token }) {
 
   useEffect(() => {
     let isMounted = true;
-    setStatus('loading');
 
-    getDashboardSummary(token)
-      .then((result) => {
+    async function loadDashboard({ initial = false } = {}) {
+      if (initial) setStatus('loading');
+      try {
+        const result = await getDashboardSummary(token);
         if (isMounted) {
           setDashboard(result.data);
           setError('');
           setStatus('ready');
         }
-      })
-      .catch((requestError) => {
+      } catch (requestError) {
         if (isMounted) {
           setError(requestError.message);
           setStatus('error');
         }
-      });
+      }
+    }
+
+    loadDashboard({ initial: true });
+    const intervalId = window.setInterval(() => loadDashboard(), 5000);
 
     return () => {
       isMounted = false;
+      window.clearInterval(intervalId);
     };
   }, [token]);
 

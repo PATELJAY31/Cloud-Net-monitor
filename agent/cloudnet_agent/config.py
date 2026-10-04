@@ -9,6 +9,7 @@ class AgentConfig:
     agent_token: str
     admin_jwt: str
     agent_registration_token: str
+    probe_host: str
     interval_seconds: int
 
 
@@ -20,6 +21,7 @@ def load_config() -> AgentConfig:
         agent_token=os.getenv("CLOUDNET_AGENT_TOKEN", ""),
         admin_jwt=os.getenv("CLOUDNET_ADMIN_JWT", ""),
         agent_registration_token=os.getenv("CLOUDNET_AGENT_REGISTRATION_TOKEN", ""),
+        probe_host=os.getenv("CLOUDNET_PROBE_HOST", "1.1.1.1"),
         interval_seconds=int(os.getenv("CLOUDNET_AGENT_INTERVAL_SECONDS", "60")),
     )
 

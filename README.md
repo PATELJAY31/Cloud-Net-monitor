@@ -287,7 +287,15 @@ Demo data appears throughout Dashboard, Devices, Device Details, Analytics, Aler
 
 ## Python Agent
 
-The optional Python agent lives in `agent/cloudnet_agent`.
+The optional Python agent lives in `agent/cloudnet_agent` and sends real endpoint measurements to the existing backend. It requires `psutil` for the real monitoring path.
+
+Install dependencies:
+
+```bash
+cd agent
+pip install -r requirements.txt
+cd ..
+```
 
 Commands:
 
@@ -303,9 +311,13 @@ It uses:
 - `CLOUDNET_API_URL`
 - `CLOUDNET_AGENT_TOKEN`
 - `CLOUDNET_ADMIN_JWT` for registration only
+- `CLOUDNET_AGENT_REGISTRATION_TOKEN` when the backend registration token is configured
 - `CLOUDNET_AGENT_INTERVAL_SECONDS`
+- `CLOUDNET_PROBE_HOST`
 
-The agent uses optional `psutil` if installed. Without it, traffic and packet counters are zero instead of fabricated.
+`register` submits the machine's actual hostname, local IP, operating system, and network interfaces. Save the returned token into `CLOUDNET_AGENT_TOKEN`, then use `heartbeat`, `once`, or `run`.
+
+`once` and `run` sample OS network counters over `CLOUDNET_AGENT_INTERVAL_SECONDS` and probe `CLOUDNET_PROBE_HOST` to report upload Mbps, download Mbps, packet counts, packet loss, latency, and jitter. Demo Mode remains separate and uses `source: demo`; real agent submissions use `source: agent`.
 
 ## Mode Differences
 
