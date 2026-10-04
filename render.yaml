@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: cloudnet-monitor-api
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: CORS_ORIGIN
+        sync: false
+      - key: AGENT_REGISTRATION_TOKEN
+        sync: false

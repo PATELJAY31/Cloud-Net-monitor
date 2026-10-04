@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+@theme {
+  --color-cloudnet-ink: #102033;
+  --color-cloudnet-panel: #f7fafc;
+  --color-cloudnet-line: #d8e2ec;
+  --color-cloudnet-blue: #2563eb;
+  --color-cloudnet-cyan: #0891b2;
+  --color-cloudnet-green: #16a34a;
+  --color-cloudnet-amber: #d97706;
+  --color-cloudnet-red: #dc2626;
+  --font-sans: Inter, ui-sans-serif, system-ui, sans-serif;
+}
+
+:root {
+  color-scheme: light;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+}
